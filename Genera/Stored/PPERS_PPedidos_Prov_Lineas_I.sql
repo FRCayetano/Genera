@@ -1,7 +1,7 @@
 USE [GENERA]
 GO
 
-/****** Object:  StoredProcedure [dbo].[PPERS_PPedidos_Prov_Lineas_I]    Script Date: 01/06/2015 16:46:25 ******/
+/****** Object:  StoredProcedure [dbo].[PPERS_PPedidos_Prov_Lineas_I]    Script Date: 25/06/2015 18:25:16 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -9,12 +9,15 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
+
 CREATE PROCEDURE [dbo].[PPERS_PPedidos_Prov_Lineas_I]
-	@IdPedido         T_Id_Pedido		OUTPUT,
-	@Precio_EURO      T_Precio			OUTPUT, 
-	@Descrip          Varchar(255)      OUTPUT,
-	@FechaEntrega     T_Fecha_Corta     OUTPUT,
-	@IdIngresoAgencia int				OUTPUT
+	@IdPedido				T_Id_Pedido			OUTPUT,
+	@Precio_EURO			T_Precio			OUTPUT,
+	@PrecioMoneda			T_Precio			OUTPUT, 
+	@Descrip				Varchar(255)		OUTPUT,
+	@FechaEntrega			T_Fecha_Corta		OUTPUT,
+	@IdObjetoAgencia		int					OUTPUT,
+	@TipoImport				varchar(255)		OUTPUT
 
 AS
 
@@ -25,8 +28,8 @@ DECLARE                             @IdArticuloProv								T_Id_Articulo       =
 DECLARE                             @IdAlmacen									T_Id_Almacen		= 0 
 DECLARE                             @Cantidad									T_Decimal_2			= 1 
 DECLARE                             @Precio										T_Precio			= 0 
---DECLARE                           @Precio_EURO								T_Precio			= 0 
-DECLARE                             @PrecioMoneda								T_Precio			= 0 
+--DECLARE							@Precio_EURO								T_Precio			= @PrecioMoneda
+--DECLARE                           @PrecioMoneda								T_Precio			= 0 
 DECLARE                             @Descuento									T_Decimal			= 0 
 DECLARE                             @IdIva										T_Id_Iva			= 0 
 DECLARE                             @IdEstado									T_Id_Estado			= 0 
@@ -73,14 +76,15 @@ DECLARE                             @IdOrdenCarga								int					= NULL
 DECLARE                             @UdsCarga									T_Decimal_2			= 0 
 DECLARE                             @NumBultosFinal								int					= 0 
 DECLARE                             @UdStockCarga								T_Decimal_2			= 0 
-DECLARE                             @UdStockRecep								T_Decimal_2			= 0 
+DECLARE                             @UdStockRecep								T_Decimal_2			= 0
+DECLARE								@IdMaquina									T_Id_Articulo		= NULL
 DECLARE                             @IdDoc										T_Id_Doc			= NULL 
 DECLARE                             @Usuario									T_CEESI_Usuario     = NULL 
 DECLARE                             @FechaInsertUpdate							T_CEESI_Fecha_Sistema = NULL
 
 
-	Exec PPedidos_Prov_Lineas_I @IdPedido,
-		@IdLinea,
+	Exec PPedidos_Prov_Lineas_I @IdPedido OUTPUT,
+		@IdLinea OUTPUT,
 		@IdArticulo,
 		@IdArticuloProv,
 		@IdAlmacen,
@@ -95,7 +99,7 @@ DECLARE                             @FechaInsertUpdate							T_CEESI_Fecha_Siste
 		@IdEmbalaje,
 		@CantidadEmbalaje,
 		@Observaciones,
-		@Descrip,
+		@Descrip OUTPUT,
 		@IdAlbaran,
 		@FechaAlbaran,
 		@IdFactura,
@@ -134,15 +138,39 @@ DECLARE                             @FechaInsertUpdate							T_CEESI_Fecha_Siste
 		@NumBultosFinal,
 		@UdStockCarga ,
 		@UdStockRecep,
-		NULL,
-		NULL,
-		NULL
+		@IdMaquina,
+		@IdDoc OUTPUT,
+		@Usuario,
+		@FechaInsertUpdate
 
-	update Conf_Pedidos_Prov_Lineas set Pers_IdIngresoAgencia = @IdIngresoAgencia where IdPedido = @IdPedido
+	if @TipoImport = 'Ingreso'
+	BEGIN
+		update Conf_Pedidos_Prov_Lineas set pFechaGasto = @FechaEntrega where IdPedido = @IdPedido and IdLinea = @IdLinea
+		insert into Pers_Mapeo_Ingreso_PedidoProv(IdIngresoAgencia, IdPedidoProv, IdLinea) values (@IdObjetoAgencia , @IdPedido, @IdLinea)
+		
+	END
 
-	RETURN -1
+	if @TipoImport = 'Gasto'
+	BEGIN
+		update Conf_Pedidos_Prov_Lineas set pFechaGasto = @FechaEntrega where IdPedido = @IdPedido and IdLinea = @IdLinea
+		--update Pers_GastosAgencia_Lineas set IdPedidoPRovLinea = @IdPedido where IdGastoAgencia = @IdObjetoAgencia and IdGastoAgenciaLinea = @IdObjetoAgenciaLinea
+	END
+
+	if @TipoImport <> ''
+	BEGIN
+		EXEC PPERS_DesgloceLinea_Pedidos 'PedidoProv_Linea'
+				,@IdPedido
+				,@IdLinea
+				,@IdDoc
+				,@FechaEntrega
+				,@Descrip
+	END
+
+RETURN -1
+
+
+
 
 
 GO
-
 
