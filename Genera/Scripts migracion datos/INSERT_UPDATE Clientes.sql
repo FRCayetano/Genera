@@ -1,4 +1,9 @@
+/*
+	* Si queremos hacer la migracion de los datos a partir de un entorno aue no tenga Office 2007 o superior, tenemos que cambiar la version de Excel en el OpenRowSet : Excel 12.0
+*/
+
 begin tran
+
 INSERT INTO Clientes_Datos (FechaAlta, IdCliente, RazonSocial, Cliente, Nif, Direccion, Web, NumTelefono)
 select GETDATE(), RIGHT('00000'+cast(IdCliente as nvarchar(10)),5),Cliente, Cliente,  CIF, DIRECCION, Correo, Telefono
 from OPENROWSET('Microsoft.ACE.OLEDB.12.0',
@@ -14,3 +19,4 @@ where Clientes_Datos_Economicos.IdCliente = RIGHT('00000'+cast(t1.IdCliente as n
 and t1.Moneda is not null
 
 commit tran
+
