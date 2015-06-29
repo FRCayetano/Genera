@@ -25,5 +25,5 @@ from OPENROWSET('Microsoft.ACE.OLEDB.12.0',
 where Conf_Proyectos.IdProyecto = RIGHT('00000'+cast(x.IdProyecto as nvarchar(10)),4)
 and x.Proyecto in ('PT CLASSIC','PT GOLD','TALKING')
 
-
 commit tran
+
