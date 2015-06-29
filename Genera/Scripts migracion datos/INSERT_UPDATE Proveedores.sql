@@ -1,4 +1,5 @@
 begin tran
+
 INSERT INTO Prov_Datos (FechaAlta, IdProveedor, RazonSocial, Proveedor, Nif, Direccion, Web, E_Mail, NumTelefono, Notas)
 select GETDATE(), RIGHT('00000'+cast(IdProveedor as nvarchar(10)),5), Proveedor,Proveedor, CIF, DIRECCION, Web, Correo, Telefono, Actividad
 from OPENROWSET('Microsoft.ACE.OLEDB.12.0',
