@@ -1,15 +1,16 @@
 USE [GENERA]
 GO
-
-/****** Object:  StoredProcedure [dbo].[PPers_GenerarPedidoProveedor_From_Ingreso]    Script Date: 25/06/2015 18:24:19 ******/
+/****** Object:  StoredProcedure [dbo].[PPers_GenerarPedidoProveedor_From_Ingreso]    Script Date: 29/06/2015 18:19:52 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-CREATE PROCEDURE [dbo].[PPers_GenerarPedidoProveedor_From_Ingreso] 
+-- =============================================
+-- Author:		<Gaetan, COLLET>
+-- Create date: <01/06/2015>
+-- Description:	<Permite la creacion de los pedidos de proveedores (terceros) a la hora de generar los pedidos a partir de los ingresos de una agencia>
+-- =============================================
+ALTER PROCEDURE [dbo].[PPers_GenerarPedidoProveedor_From_Ingreso] 
 	 @IdEmpresa T_Id_Empresa OUTPUT
 	,@Fecha T_Fecha_Corta OUTPUT
 	,@IdEmpleado T_Id_Empleado OUTPUT
@@ -80,10 +81,11 @@ BEGIN
 	/***********************************************************************************************************************
 	Comprobacion para ver si existe un tercero asociado a ese proyecto
 		Si existe : continuar la creacion de pedido
-		Si no existe : no hacer nada
+		Si no : no hacer nada 
 ************************************************************************************************************************/
 	BEGIN TRY
 
+		--Declaramos el cursor para recoger todos los proyectos que tengan ingresos en el IngresoAgencia
 		DECLARE @IdProyecto			T_Id_Proyecto
 		DECLARE @ImporteProyecto	DECIMAL(18,4)
 		DECLARE cursor_ingresoAgenciaLineas CURSOR FOR 
@@ -99,7 +101,7 @@ BEGIN
         WHILE @@FETCH_STATUS = 0
         BEGIN
 				
-			--Recuparar el ID del proveedor asociado al proyecto @IdProyecto
+			--Obtener el ID del proveedor asociado al proyecto @IdProyecto
 			SELECT @IdProveedor = ISNULL(IdProveedor, - 1)
 			FROM Proyectos
 			WHERE IdProyecto = @IdProyecto
@@ -112,7 +114,7 @@ BEGIN
 					WHERE IdProveedor = @IdProveedor
 					)
 					
-				--Recuperacion de la propriedades del proyecto
+				--Recuperacion de la propriedades del proyecto (UpFront, GastosPendiente, Porcentaje tercero...)
 				SELECT @PorcentajeProveedor = cp.Pers_PorcentajeTercero
 					,@UpFront = ISNULL(cp.Pers_UpFront, 0)
 					,@UpFrontAcumulado = ISNULL(cp.Pers_UpFrontAcumulado, 0)
@@ -125,7 +127,7 @@ BEGIN
 				--Gestion de la moneda
 				SET @ImporteLineaPedido = @ImporteProyecto * (@PorcentajeProveedor / 100)
 				SET @IdMonedaProveedor = (
-						SELECT IdMoneda
+						SELECT ISNULL(IdMoneda,1)
 						FROM Prov_Datos_Economicos
 						WHERE IdProveedor = @IdProveedor
 						)
@@ -148,7 +150,7 @@ BEGIN
 
 				IF @IdMonedaProveedor = 1
 				BEGIN
-					--Si la moneda del excel nos viene en dolare, convert el importe en EURO
+					--Si la moneda del excel nos viene en dolares, convertir el importe en EURO
 					IF @IdMoneda > 1
 					BEGIN
 						SET @Precio_EURO = @ImporteLineaPedido / @CambioDelDia
@@ -236,6 +238,7 @@ BEGIN
 				ELSE
 				BEGIN
 
+					--Si ya existe un pedido para el tercero, recuperamos el id de este pedido y añadimos una linea al pedido
 					SELECT @IdPedido = MIN(cab.Idpedido)
 					FROM Pedidos_Prov_Cabecera cab
 					INNER JOIN Pedidos_Prov_Lineas li ON cab.IdPedido = li.IdPedido
@@ -254,7 +257,7 @@ BEGIN
 						,@TipoImport
 				END
 
-				--Recuperar el importe total del pedido para asegurarse de que, a la hora de descontar el upfront y los gastos, no vamos a crear un pedido con un importe negativo
+				--Recuperar el importe total del pedido para asegurarse de que, a la hora de descontar el upfront y los gastos, que no vamos a crear un pedido con un importe negativo
 				SET @ImportePedido = (
 						SELECT sum(PrecioMoneda)
 						FROM Pedidos_Prov_Lineas
@@ -274,12 +277,14 @@ BEGIN
 						WHERE IdProyecto = @IdProyecto
 						)
 
+				--Entramos aqui si queda upFront a descontar para el proyecto
 				IF @UpFront <> 0
 					AND @UpFrontAcumulado < @UpFront
 				BEGIN
 					SET @DescripcionPed = 'UpFront del proyecto : ' + @IdProyecto
 					SET @TipoImport = ''
 
+					--Si el importe del pedido esta superior al upfront restante, podemos descontar todo el upFront restante en el pedido
 					IF @ImportePedido >= (@UpFront - @UpFrontAcumulado)
 					BEGIN
 						SET @ImportePedido = @ImportePedido - (@UpFront - @UpFrontAcumulado)
@@ -291,6 +296,8 @@ BEGIN
 					END
 					ELSE
 					BEGIN
+					-- Queda mas UpFront que el importe total del pedido, asi no se puede descontar todo el UpFront restante
+					-- En este caso ponemos el pedido a zero y descontamos el importe del pedido al UpFront
 						SET @ImporteLineaDescontada = @ImporteLineaPedido * - 1
 
 						SET @ImportePedido = @ImportePedido - (@ImporteLineaDescontada * - 1)
@@ -310,11 +317,13 @@ BEGIN
 						--,@IdIngresoAgenciaLinea
 						,@TipoImport
 
+	
 					SET @IdLineaMovimientoHistorico = (
 							SELECT ISNULL(MAX(IdMovimiento), 0)
 							FROM Pers_Historico_Mov_UpFrontGastos
 							)
 
+					--Escribimos una linea en la tabla Pers_Historico_Mov_UpFrontGastos para seguir los movimientos de importe de UpFront y GastosPendiente
 					INSERT INTO Pers_Historico_Mov_UpFrontGastos (
 						IdMovimiento
 						,TipoMovimiento
@@ -379,6 +388,7 @@ BEGIN
 							FROM Pers_Historico_Mov_UpFrontGastos
 							)
 
+					--Si existe, descontar los gastos Pendientes y actualizamos el campo gastos pendientes de la tabla Conf_Proyectos
 					INSERT INTO Pers_Historico_Mov_UpFrontGastos (
 						IdMovimiento
 						,TipoMovimiento
@@ -429,5 +439,3 @@ BEGIN
 		RETURN 0
 	END CATCH
 END
-GO
-

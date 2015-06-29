@@ -1,16 +1,16 @@
 USE [GENERA]
 GO
-
-/****** Object:  StoredProcedure [dbo].[PPers_GenerarPedidoProveedor_From_Gastos]    Script Date: 25/06/2015 18:24:04 ******/
+/****** Object:  StoredProcedure [dbo].[PPers_GenerarPedidoProveedor_From_Gastos]    Script Date: 29/06/2015 18:19:35 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
-
- 
-CREATE PROCEDURE [dbo].[PPers_GenerarPedidoProveedor_From_Gastos]
+-- =============================================
+-- Author:		<Gaetan, COLLET>
+-- Create date: <01/06/2015>
+-- Description:	<Permite la creacion del pedido proveedor a la hora de generar el pedido despues de importar los gastos (de marketing) que vienen de una agencia>
+-- =============================================
+ALTER PROCEDURE [dbo].[PPers_GenerarPedidoProveedor_From_Gastos]
 	@IdEmpresa				T_Id_Empresa		OUTPUT	,
 	@IdProveedor			T_Id_Proveedor		OUTPUT	,			                 
     @Fecha 					T_Fecha_Corta		OUTPUT	,
@@ -22,7 +22,7 @@ CREATE PROCEDURE [dbo].[PPers_GenerarPedidoProveedor_From_Gastos]
 AS
 BEGIN
 /***********************************************************************************************************************
-									Declaracion de la variables y inicializacion blabla
+									Declaracion de la variables y inicializacion
 ************************************************************************************************************************/
 
 	DECLARE		@IdPedido			T_Id_Pedido = 0
@@ -77,7 +77,7 @@ BEGIN
 	DECLARE		@TipoImport				varchar(255) = 'Gasto'
 	DECLARE		@IdGastoAgenciaLinea	int
 	DECLARE		@IdMonedaProveedor		T_Id_Moneda
-	DECLARE @CambioDelDia					DECIMAL(18,4)
+	DECLARE		@CambioDelDia			DECIMAL(18,4)
 
 	SET @CambioDelDia = (
 			SELECT Cambio
@@ -89,7 +89,7 @@ BEGIN
 
 	Set @DescripcionPed = 'Generado desde Gasto numero : '+cast(@IdGastoAgencia as varchar)
 
-	Set @IdMonedaProveedor = (Select IdMoneda from Prov_Datos_Economicos where IDProveedor = @IdProveedor)
+	Set @IdMonedaProveedor = (Select ISNULL(IdMoneda,1) from Prov_Datos_Economicos where IDProveedor = @IdProveedor)
 
 	BEGIN TRY
 
@@ -162,13 +162,14 @@ BEGIN
 		DECLARE	@Precio_euro					T_Precio
 
 		DECLARE cursor_gastosAgenciaLineas CURSOR FOR 
-			select distinct il.IdProyecto, il.Importe, 'Proyecto '+p.Descrip+' : ' + il.IdProyecto, il.IdGastoAgenciaLinea
+			select distinct il.IdProyecto, SUM(il.Importe), p.Descrip + ' : ' + p.IdProyecto
 			from Pers_GastosAgencia_Lineas il
 			inner join Proyectos p on il.IdProyecto = p.IdProyecto
 			where il.IdGastoAgencia = @IdGastoAgencia
+			group by il.IdProyecto, p.Descrip + ' : ' + p.IdProyecto
 				
 		OPEN cursor_gastosAgenciaLineas
-		FETCH cursor_gastosAgenciaLineas INTO @IdProyectoLin, @ImporteProyecto, @DescripProyecto, @IdGastoAgenciaLinea
+		FETCH cursor_gastosAgenciaLineas INTO @IdProyectoLin, @ImporteProyecto, @DescripProyecto
 				
 		WHILE @@FETCH_STATUS = 0
 		BEGIN
@@ -201,7 +202,7 @@ BEGIN
 				SET @PrecioMoneda = @Precio_EURO
 			END
 
-			Exec PPERS_PPedidos_Prov_Lineas_I @IdPedido, @Precio_EURO, @PrecioMoneda, @DescripProyecto, @Fecha, @IdGastoAgencia, @IdGastoAgenciaLinea, @TipoImport
+			Exec PPERS_PPedidos_Prov_Lineas_I @IdPedido, @Precio_EURO, @PrecioMoneda, @DescripProyecto, @Fecha, @IdGastoAgencia, @TipoImport
 
 			SET @IdTercero = (SELECT IdProveedor from Proyectos where IdProyecto = @IdProyectoLin)
 			IF @IdTercero IS NOT NULL
@@ -228,7 +229,7 @@ BEGIN
 						VALUES (@IdLineaMovimientoHistorico + 1, 'GastosPendientes', 'Moficado tras importacion de gasto' , (@Old_Pers_GastosAcumulado + @ImporteGastoTercero), @IdGastoAgencia, @IdGastoAgenciaLinea, @IdProyectoLin, GETDATE())
 				END
 
-			FETCH cursor_gastosAgenciaLineas INTO @IdProyectoLin, @ImporteProyecto, @DescripProyecto, @IdGastoAgenciaLinea
+			FETCH cursor_gastosAgenciaLineas INTO @IdProyectoLin, @ImporteProyecto, @DescripProyecto
 		END
  
 		CLOSE cursor_gastosAgenciaLineas
@@ -274,5 +275,3 @@ BEGIN
         RETURN 0
     END CATCH
 END
-GO
-

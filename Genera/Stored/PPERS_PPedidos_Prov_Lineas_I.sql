@@ -1,16 +1,13 @@
 USE [GENERA]
 GO
-
-/****** Object:  StoredProcedure [dbo].[PPERS_PPedidos_Prov_Lineas_I]    Script Date: 25/06/2015 18:25:16 ******/
+/****** Object:  StoredProcedure [dbo].[PPERS_PPedidos_Prov_Lineas_I]    Script Date: 29/06/2015 18:21:31 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
 
-
-CREATE PROCEDURE [dbo].[PPERS_PPedidos_Prov_Lineas_I]
+ALTER PROCEDURE [dbo].[PPERS_PPedidos_Prov_Lineas_I]
 	@IdPedido				T_Id_Pedido			OUTPUT,
 	@Precio_EURO			T_Precio			OUTPUT,
 	@PrecioMoneda			T_Precio			OUTPUT, 
@@ -170,7 +167,4 @@ RETURN -1
 
 
 
-
-
-GO
 
