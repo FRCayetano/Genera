@@ -222,6 +222,8 @@ Sub ImportarExcel(lFichero )
 
   gForm.Controls("GridAgenciaLineas").Refrescar
 
+  gform.Eobjeto.Refresh
+
 End Sub
 
 Sub AbrirFormImportacion(lClaveUser)
