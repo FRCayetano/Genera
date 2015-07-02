@@ -32,7 +32,7 @@ BEGIN
 	--DECLARE		@Fecha			T_Fecha_Corta = GETDATE()
 	--DECLARE		@IdProveedor		T_Id_Proveedor
 	DECLARE		@IdPedidoProv		varchar(50) = NULL
-	DECLARE		@IdContacto			int = 8
+	DECLARE		@IdContacto			int = (select IdContacto from Prov_Datos where IdProveedor = @IdProveedor)
 	DECLARE		@DescripcionPed	varchar(255) = NULL
 	DECLARE		@IdLista			T_Id_Lista = 0
 	--DECLARE		@IdEmpleado		T_Id_Empleado = NULL
