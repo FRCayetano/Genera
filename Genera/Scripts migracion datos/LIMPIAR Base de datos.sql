@@ -1,7 +1,14 @@
 --Borrar la configuracion actual
+delete from Pers_Presupuestos_Equipos_Gastos
+delete from Pers_Presupuestos_Equipos_GastosStaff
+delete from Pers_Presupuestos_Equipos_Proyectos
+delete from Pers_Presupuestos_Equipos
+delete from Pers_Presupuestos_Equipos_Empleados
+delete from Pers_Presupuestos
+
+
 delete from Pers_Proyectos_Agencias_Ingresos
 delete from Pers_Proyectos_Agencias_Gastos
-delete from Pers_Presupuestos_Equipos_Proyectos
 delete from Proyectos
 delete from Pers_Equipos
 
