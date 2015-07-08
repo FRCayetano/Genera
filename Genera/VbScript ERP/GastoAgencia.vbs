@@ -215,7 +215,7 @@ Sub ImportarExcel(lFichero )
       gForm.Botonera.Boton("btGenerarPed").Visible = True
     End If
     
-    If MsgBox("Importacion terminada, quereis ver el importe de inportacion ?", vbYesNo, "Confirmacion") = vbYes Then
+    If MsgBox("Importacion terminada, quereis ver el importe de importacion ?", vbYesNo, "Confirmacion") = vbYes Then
        AbrirFormImportacion(claveImportacion)
     End If
   End If
