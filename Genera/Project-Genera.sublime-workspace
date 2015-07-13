@@ -4,6 +4,70 @@
 		"selected_items":
 		[
 			[
+				"IdPreu",
+				"IdPresupuestoNuevo"
+			],
+			[
+				"Pers_Presu",
+				"Pers_Presupuestos_Equipos_Gastos	(PresupuestoGestion.vbs)"
+			],
+			[
+				"Pers_Pre",
+				"Pers_Presupuesto"
+			],
+			[
+				"IDP",
+				"IdPresupuestoNuevo"
+			],
+			[
+				"GastosMa",
+				"GastosMayo	(PresupuestoGestion.vbs)"
+			],
+			[
+				"GastosA",
+				"GastosAbril	(PresupuestoGestion.vbs)"
+			],
+			[
+				"IngresosJu",
+				"IngresosJunio	(PresupuestoGestion.vbs)"
+			],
+			[
+				"IngresosMa",
+				"IngresosMayo	(PresupuestoGestion.vbs)"
+			],
+			[
+				"Porc",
+				"PorcGastosEstructura	(PresupuestoGestion.vbs)"
+			],
+			[
+				"Pers_Pres",
+				"Pers_Presupuesto"
+			],
+			[
+				"IdPe",
+				"IdPresupuesto"
+			],
+			[
+				"Des",
+				"Descrip	(GastoAgencia.vbs)"
+			],
+			[
+				"Fech",
+				"Fecha_Fin	(PresupuestoGestion.vbs)"
+			],
+			[
+				"Fecha",
+				"Fecha_Inicio	(PresupuestoGestion.vbs)"
+			],
+			[
+				"IDPres",
+				"IdPresupuesto	(PresupuestoGestion.vbs)"
+			],
+			[
+				"Pers_Ingreso",
+				"Pers_IngresoAgencia_Cab	(Pers_IngresoAgencia_Cab.sql)"
+			],
+			[
 				"Cambio",
 				"CambioDelDia"
 			],
@@ -44,53 +108,54 @@
 	"buffers":
 	[
 		{
-			"file": "Scripts migracion datos/INSERT_UPDATE Clientes.sql",
+			"contents": "Sub Show()\n'  Set oShell = CreateObject(\"WScript.Shell\")\n'  oShell.SendKeys \"% x\"\nEnd Sub\n\nSub Initialize()\n\n  \n   With gForm.Controls(\"PnlMain\")\n    .ResizeEnabled = True\n    .ResizeRestanteV = False\n    .ResizeV = 3\n\n  End With   \n\n  gForm.Controls(\"EObjeto\").ResizeV = 2\n\n  Set lPest1 = gForm.Controls.Add(\"AhoraOCX.cntTab\", \"Pest11\")\n  lPest1.ResizeEnabled = True\n  lPest1.ResizeV = 4\n  lPest1.ResizeRestanteV = True  \n  lPest1.Visible = True\n  \n  gForm.Width=20000\n  gForm.Height = 14200\n    CargaControles\n  \n  gForm.Controls(\"Botonera\").BotonAdd \"Refrescar Todo\", \"btnRefrescarTodo\", , , , 383\n  \nEnd Sub\n\nSub CargaControles\n  CargaPrincipal\n  CargaEquipos\n  CargaProyectos\n   CargaGastos\n   CargaIngresosVsGastos\n   CargaEquiposEmpleados\nEnd Sub\n\n\nSub CargaPrincipal\n  Set lPnl2 = gForm.Controls.Add(\"Threed.SSPanel\", \"plnPrincipal\")  \n  With lPnl2  \n    .Object.AutoSize = 3 'ssChildToPanel  \n    .Visible = True \n    gForm.Controls(\"Pest11\").InsertItem 0, \"Principal\", .Object.Hwnd, 170\n    Set gForm.Controls(\"PnlMain\").COntainer = lPnl2\n  End With  \n  CreaCampoTexto \"Pers_IdPresupuesto\", gForm.Controls(\"PnlMain\"), 300, 195, 1815, 300, \"Id Presup.\", 800, 0, \"EObjeto\", \"IdPresupuesto\" \n  CreaCampoTexto \"Pers_Descrip\", gForm.Controls(\"PnlMain\"), 2375, 195, 4920, 300, \"Descripción\", 1000, 0, \"EObjeto\", \"Descrip\" \n  CreaCampoTexto \"Pers_Año\", gForm.Controls(\"PnlMain\"), 300, 560, 1815, 300, \"Año\", 800, 0, \"EObjeto\", \"Anyo\" \n  CreaCampoTexto \"Pers_FechaInicio\", gForm.Controls(\"PnlMain\"), 2375, 560, 2220, 300, \"Fecha Inicio\", 1000, 0, \"EObjeto\", \"Fecha_Inicio\" \n  CreaCampoTexto \"Pers_FechaFin\", gForm.Controls(\"PnlMain\"), 4715, 560, 2565, 300, \"Fecha Fin\", 1000, 0, \"EObjeto\", \"Fecha_Fin\" \n  lsql = \"SELECT Descrip, IdEjercicio FROM COnta_Ejercicios WHERE IdEmpresa = 0\"\n  CreaCampoCombo \"Pers_Ejercicio\", gForm.Controls(\"PnlMain\"), 300, 915, 3045, 300, \"Ejercicio\" ,800, lSql, 3045, \"Descrip\", 8, 1000, \"IdEjercicio\", 8, 2, 2, \"EObjeto\", \"IdEjercicio\"\n  CreaCheck \"Pers_Cerrado\", gForm.Controls(\"PnlMain\"), 3750, 915, 1425, 300, \"Cerrado\", 1185, \"EObjeto\", \"Cerrado\"\n  CreaCheck \"Pers_Activo\", gForm.Controls(\"PnlMain\"), 5850, 915, 1425, 300, \"Activo\", 1185, \"EObjeto\", \"Activo\"\n  \n  \nEnd Sub\n\n\nFunction CreaCampoTexto(aNombre, aParent, aLeft, aTop, aWidth, aHeight, aCaption, aAnchoEtiqueta, aMultilinea, aObjOrigen, aObjPOrigen)\n\n  Dim lCtrl\n  \n  If aMultilinea <> 0 Then\n    Set lCtrl = gForm.Controls.Add(\"AhoraOCX.TextoMultilinea\", aNombre, aParent)\n  Else\n    Set lCtrl = gForm.Controls.Add(\"AhoraOCX.TextoUsuario\", aNombre, aParent)\n  End If \n  With lCtrl\n    .Move aLeft, aTop, aWidth, aHeight\n    .CaptionVisible = True  \n    .CaptionWidth = aAnchoEtiqueta\n    .CaptionControl = aCaption \n    .ObjOrigen = aObjOrigen\n    .ObjPOrigen = aObjPOrigen\n    .AplicaEstilo\n    .Visible = True\n    .Enabled = True\n  End With\nEnd Function\n\nFunction CreaCampoCombo(aNombre, aParent, aLeft, aTop, aWidth, aHeight, aCaption, aAnchoEtiqueta, aSQl, aAnch1, ANom1, aTD1, aAnch2, ANom2, aTD2, aNcol, aActiva, aObjOrigen, aObjPOrigen)\n\n  Dim lCtrl\n  \n  Set lCtrl = gForm.Controls.Add(\"AhoraOCX.ComboUsuario\", aNombre, aParent)\n    With lCtrl\n    .Move aLeft, aTop, aWidth, aHeight\n    .CaptionVisible = True  \n    .CaptionWidth = aAnchoEtiqueta\n    .CaptionControl = aCaption \n    .C1Anchura = aAnch1\n    .C1Nombre = ANom1  \n    .C1TipoDato = aTD1 \n    .C2Anchura = aAnch2\n    .C2Nombre = ANom2  \n    .C2TipoDato = aTD2\n    .NColumnas = aNcol  \n    .cActiva = aActiva     \n    .Descripcion = aSQL\n    .ObjOrigen = aObjOrigen\n    .ObjPOrigen = aObjPOrigen\n    \n    .AplicaEstilo\n    .Visible = True\n    .Enabled = True\n  End With\nEnd Function\n\nSub CreaCheck(aNombre, aParent, aLeft, aTop, aWidth, aHeight, aCaption, aAnchoEtiqueta, aObjOrigen,aObjPOrigen)\n\n  Dim lCtrl\n  Set lCtrl = gForm.Controls.Add(\"AhoraOCX.CheckBoxUser\", aNombre, aParent)\n  \n  With lCtrl\n    .Move aLeft, aTop, aWidth, aHeight\n    .CaptionVisible = True  \n    .CaptionWidth = aAnchoEtiqueta\n    .CaptionControl = aCaption \n    .ObjOrigen = aObjOrigen\n    .ObjPOrigen = aObjPOrigen\n    .Visible = True\n    .Locked = False\n    '.Value = aValue\n  End With\nEnd Sub\n\nSub CargaEquipos\n  Set lPnl3 = gForm.Controls.Add(\"Threed.SSPanel\", \"plnEquipos\")  \n  With lPnl3  \n    .Object.AutoSize = 3 'ssChildToPanel  \n    .Visible = True \n    gForm.Controls(\"Pest11\").InsertItem 1, \"Equipos\", .Object.Hwnd, 170\n  End With  \n\n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlEquipos2\", gForm.Controls(\"plnEquipos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 0\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdEquipos\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  lGrid.ActivarScripts=True\n  lGrid.Enabled = True\n  \n     With gForm.Controls(\"grdEquipos\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n     .AgregaColumna \"PorcGastosFijos\", 1000, \"%Gasto Fijo\", False\n  .AgregaColumna \"PorcGastosEstructura\", 1200, \"%Gasto Estruct.\", False\n      .AgregaColumna \"IngresosEnero\", 1000, \"Ing. Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosFebrero\", 1000, \"Ing. Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMarzo\", 1000, \"Ing. Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAbril\", 1000, \"Ing. Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMayo\", 1000, \"Ing. Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJunio\", 1000, \"Ing. Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJulio\", 1000, \"Ing. Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAgosto\", 1000, \"Ing. Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosSeptiembre\", 1100, \"Ing. Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosOctubre\", 1000, \"Ing. Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosNoviembre\", 1100, \"Ing. Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosDiciembre\", 1000, \"Ing. Diciembre\", False,,,\"#,##0.00\"\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n\n     .From = \"Pers_Presupuestos_Equipos\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n    \n    .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n      \n  End With\n\n  \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlProyectosEquipos\", gForm.Controls(\"plnEquipos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 5500\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdProyectos\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \n  \n  \n\n\nEnd Sub\nSub  CargaProyectos\n  Set lPnl4 = gForm.Controls.Add(\"Threed.SSPanel\", \"plnProyectos\")  \n  With lPnl4  \n    .Object.AutoSize = 3 'ssChildToPanel  \n    .Visible = True \n    gForm.Controls(\"Pest11\").InsertItem 2, \"Proyectos\", .Object.Hwnd, 170\n  End With  \n  \n   \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlProyectosEquipos2\", gForm.Controls(\"plnProyectos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 0\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdProyectos2\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \n  \n     With gForm.Controls(\"grdProyectos2\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     '.AgregaColumna \"IdEquipo\", 0, \"IdEq\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n' .AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n   .AgregaColumna \"IdProyecto\", 3000, \"Proyecto\", False, \"Select IdProyecto as ID, IdProyecto, Descrip from Proyectos \"\n  '.AgregaColumna \"@Proyecto\", 3000, \"Proyecto\", True, \"Select IdProyecto as ID, Descrip from Proyectos\"\n     '.AgregaColumna \"Porcentaje\", 1000, \"%Proyecto\", False\n      .AgregaColumna \"IngresosEnero\", 1000, \"Ing. Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosFebrero\", 1000, \"Ing. Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMarzo\", 1000, \"Ing. Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAbril\", 1000, \"Ing. Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMayo\", 1000, \"Ing. Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJunio\", 1000, \"Ing. Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJulio\", 1000, \"Ing. Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAgosto\", 1000, \"Ing. Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosSeptiembre\", 1100, \"Ing. Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosOctubre\", 1000, \"Ing. Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosNoviembre\", 1100, \"Ing. Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosDiciembre\", 1000, \"Ing. Diciembre\", False,,,\"#,##0.00\"\n      \n  '.Campo(\"@Proyecto\").Sustitucion = \"Select Descrip from Proyectos where IdProyecto = @IdProyecto\"\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  .Campo(\"IdProyecto\").coleccion = \"Proyectos\"\n  .Campo(\"IdProyecto\").ColeccionWhere = \"Where IdProyecto = @IdProyecto\"\n  \n\n     .From = \"vPers_Presupuestos_Equipos_Proyectos\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos_Proyectos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdProyecto\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdProyecto\", \"Select IdProyecto, Descrip from Proyectos\", False\n      \n  End With\n  \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlEquipos3\", gForm.Controls(\"plnProyectos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 5500\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdEquipos2\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  lGrid.ActivarScripts=True\n  lGrid.Enabled = True\n  \n     \n\nEnd Sub\n\nSub  CargaGastos\nSet lPnl5 = gForm.Controls.Add(\"Threed.SSPanel\", \"plnGastos\") \n  With lPnl5  \n    .Object.AutoSize = 3 'ssChildToPanel  \n    .Visible = True \n    gForm.Controls(\"Pest11\").InsertItem 3, \"Gastos\", .Object.Hwnd, 170\n  End With\n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlEquiposGastos\", gForm.Controls(\"plnGastos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 0\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdEquiposGastos\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  lGrid.ActivarScripts=True\n  lGrid.Enabled = True\n  \n     With gForm.Controls(\"grdEquiposGastos\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n     .AgregaColumna \"PorcGastosFijos\", 1000, \"%Gasto Fijo\", False\n  .AgregaColumna \"PorcGastosEstructura\", 1200, \"%Gasto Estruct.\", False\n      .AgregaColumna \"GastosEnero\", 1000, \"Gasto Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosFebrero\", 1000, \"Gasto Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosMarzo\", 1000, \"Gasto Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosAbril\", 1000, \"Gasto Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosMayo\", 1000, \"Gasto Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosJunio\", 1000, \"Gasto Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosJulio\", 1000, \"Gasto Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosAgosto\", 1000, \"Gasto Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosSeptiembre\", 1100, \"Gasto Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosOctubre\", 1000, \"Gasto Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosNoviembre\", 1100, \"Gasto Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosDiciembre\", 1000, \"Gasto Diciembre\", False,,,\"#,##0.00\"\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n\n     .From = \"Pers_Presupuestos_Equipos\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n      \n      .MenuItemAdd \"Fijar Gasto Personal Mensual\",\"mnuPers_FijarGastoPersonalMensual\", 0 ,, True, False, 123\n  End With\n  \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlGastosEquiposStaff\", gForm.Controls(\"plnGastos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 5100\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 2500\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdEquiposStaff\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \n    Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlGastosOtros\", gForm.Controls(\"plnGastos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 7800\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 2500\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdGastosOtros\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \nEnd Sub\n\n\nSub CargaEquiposEmpleados\n  Set lPnl3 = gForm.Controls.Add(\"Threed.SSPanel\", \"plnEquiposEmpleados\") \n  With lPnl3  \n    .Object.AutoSize = 3 'ssChildToPanel  \n    .Visible = True \n    gForm.Controls(\"Pest11\").InsertItem 4, \"Equipos Empleados\", .Object.Hwnd, 170\n  End With  \n\n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlEquiposEmpleados\", gForm.Controls(\"plnEquiposEmpleados\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 0\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdEquiposEmpleados\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  lGrid.ActivarScripts=True\n  lGrid.Enabled = True\n  \n     With gForm.Controls(\"grdEquiposEmpleados\")       \n        \n     .Agregar = False\n     .Editar = False\n     .Eliminar = False\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     '.AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Activo=1\"\n   .AgregaColumna \"Staff\", 1000, \"Staff\", True\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n    ' .AgregaColumna \"PorcGastosFijos\", 1000, \"%Gasto Fijo\", False\n  '.AgregaColumna \"PorcGastosEstructura\", 1200, \"%Gasto Estruct.\", False\n    '  .AgregaColumna \"IngresosEnero\", 1000, \"Ing. Enero\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosFebrero\", 1000, \"Ing. Febrero\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosMarzo\", 1000, \"Ing. Marzo\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosAbril\", 1000, \"Ing. Abril\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosMayo\", 1000, \"Ing. Mayo\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosJunio\", 1000, \"Ing. Junio\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosJulio\", 1000, \"Ing. Julio\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosAgosto\", 1000, \"Ing. Agosto\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosSeptiembre\", 1100, \"Ing. Septiembre\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosOctubre\", 1000, \"Ing. Octubre\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosNoviembre\", 1100, \"Ing. Noviembre\", False,,,\"#,##0.00\"\n    '  .AgregaColumna \"IngresosDiciembre\", 1000, \"Ing. Diciembre\", False,,,\"#,##0.00\"\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  '.Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n\n     .From = \"Pers_Equipos\" \n     .TablaObjeto = \"Pers_Equipos\"\n     '.Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n    \n    .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n      \n  End With\n\n  \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlEmpleados\", gForm.Controls(\"plnEquiposEmpleados\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 5500\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 5000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdEmpleados\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \n \nEnd Sub\n\n\n\nSub   CargaIngresosVsGastos\nSet lPnl5 = gForm.Controls.Add(\"Threed.SSPanel\", \"plnIngresos\") \n  With lPnl5  \n    .Object.AutoSize = 3 'ssChildToPanel  \n    .Visible = True \n    gForm.Controls(\"Pest11\").InsertItem 10, \"Ingresos Vs Gastos\", .Object.Hwnd, 170\n  End With\n  \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlIngresosFinal\", gForm.Controls(\"plnIngresos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 0\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 4000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdIngresosFinal\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  lGrid.ActivarScripts=True\n  lGrid.Enabled = True\n  \n     With gForm.Controls(\"grdIngresosFinal\")       \n        \n     .Agregar = False\n     .Editar = False\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n  .AgregaColumna \"IngresosTotal\", 1400, \"Ingresos Total\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosEnero\", 1200, \"Ingresos Enero\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosFebrero\", 1200, \"Ingresos Febrero\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosMarzo\", 1200, \"Ingresos Marzo\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosAbril\", 1200, \"Ingresos Abril\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosMayo\", 1200, \"Ingresos Mayo\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosJunio\", 1200, \"Ingresos Junio\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosJulio\", 1200, \"Ingresos Julio\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosAgosto\", 1200, \"Ingresos Agosto\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosSeptiembre\", 1200, \"Ingresos Septiembre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosOctubre\", 1200, \"Ingresos Octubre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosNoviembre\", 1200, \"Ingresos Noviembre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"IngresosDiciembre\", 1200, \"Ingresos Diciembre\", False,,,\"#,##0.00\",True\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  '.Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n\n     .From = \"vPers_PresupuestoIngresosVsGastos\" \n     .TablaObjeto = \"vPers_PresupuestoIngresosVsGastos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n            \n  End With\n  \n  \n  Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlGastosFinal\", gForm.Controls(\"plnIngresos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 4100\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 4000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdGastosFinal\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \n  \n     With gForm.Controls(\"grdGastosFinal\")       \n        \n     .Agregar = False\n     .Editar = False\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n      .AgregaColumna \"GastosTotal\", 1400, \"Gastos Total\", False,,,\"#,##0.00\",True\n    .AgregaColumna \"GastosEnero\", 1200, \"Gastos Enero\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosFebrero\", 1200, \"Gastos Febrero\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosMarzo\", 1200, \"Gastos Marzo\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosAbril\", 1200, \"Gastos Abril\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosMayo\", 1200, \"Gastos Mayo\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosJunio\", 1200, \"Gastos Junio\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosJulio\", 1200, \"Gastos Julio\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosAgosto\", 1200, \"Gastos Agosto\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosSeptiembre\", 1200, \"Gastos Septiembre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosOctubre\", 1200, \"Gastos Octubre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosNoviembre\", 1200, \"Gastos Noviembre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"GastosDiciembre\", 1200, \"Gastos Diciembre\", False,,,\"#,##0.00\",True\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  '.Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n\n     .From = \"vPers_PresupuestoIngresosVsGastos\" \n     .TablaObjeto = \"vPers_PresupuestoIngresosVsGastos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n            \n  End With\n  \n  \n    Set lPnl = gForm.Controls.Add(\"AhoraOCX.cntPanel\", \"pnlMargenFinal\", gForm.Controls(\"plnIngresos\"))   \n  lPnl.ResizeInterior = True\n  lPnl.ResizeEnabled = True\n  lPnl.Estilo = 0\n  lPnl.Visible = True\n  lPnl.Top = 8200\n  lPnl.Width = gForm.Width - 200\n  lPnl.Height = 4000\n\n  Set lGrid = gForm.Controls.Add(\"AhoraOCX.cntGridUsuario\", \"grdMargenFinal\",lPnl )\n  lGrid.Visible = True\n  lGrid.AplicaEstilo  \n  lPnl.ResizeEnabled = True\n  lgrid.Width = lPnl.width \n  lgrid.height = lPnl.Height\n  \n  \n     With gForm.Controls(\"grdMargenFinal\")       \n        \n     .Agregar = False\n     .Editar = False\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n      .AgregaColumna \"MargenTotal\", 1400, \"Margen Total\", False,,,\"#,##0.00\",True\n    .AgregaColumna \"MargenEnero\", 1200, \"Margen Enero\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenFebrero\", 1200, \"Margen Febrero\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenMarzo\", 1200, \"Margen Marzo\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenAbril\", 1200, \"Margen Abril\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenMayo\", 1200, \"Margen Mayo\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenJunio\", 1200, \"Margen Junio\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenJulio\", 1200, \"Margen Julio\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenAgosto\", 1200, \"Margen Agosto\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenSeptiembre\", 1200, \"Margen Septiembre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenOctubre\", 1200, \"Margen Octubre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenNoviembre\", 1200, \"Margen Noviembre\", False,,,\"#,##0.00\",True\n      .AgregaColumna \"MargenDiciembre\", 1200, \"Margen Diciembre\", False,,,\"#,##0.00\",True\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  '.Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n\n     .From = \"vPers_PresupuestoIngresosVsGastos\" \n     .TablaObjeto = \"vPers_PresupuestoIngresosVsGastos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n            \n  End With\n  \nEnd Sub\n\n\n'Para Activar este evento hay que configurar la grid. Poner en el sub Initialize por ejemplo: gForm.grdLineas.ActivarScripts = True\nSub Grid_RowColChange(aGrid, LastRow, LastCol)\n  If aGrid.Name = \"grdEquipos\" Then\n    lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n    If Len(\"\" & lIdEquipo)>0 Then\n      CargaGridProyectosEquipos(lIdEquipo)\n    Else\n      gForm.Controls(\"grdProyectos\").LimpiaGrid\n    End If\n  End If\n \n If aGrid.Name = \"grdProyectos2\" Then\n    lIdProyecto = aGrid.GetValue(\"IdProyecto\")\n    If Len(\"\" & lIdProyecto )>0 Then\n      CargaGridEquiposProyectos(lIdProyecto)\n    Else \n      gForm.Controls(\"grdEquipos2\").LimpiaGrid\n    End If\n End If\n \n  If aGrid.Name = \"grdEquiposGastos\" Then\n    lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n     If Len(\"\" & lIdEquipo)>0 Then\n        CargaGridGastosEquiposStaffyOtros(lIdEquipo)\n     Else \n       gForm.Controls(\"grdEquiposStaff\").LimpiaGrid \n       gForm.Controls(\"grdGastosOtros\").LimpiaGrid \n     End If\n End If\n \n   If aGrid.Name = \"grdEquiposEmpleados\" Then\n    lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n    If Len(\"\" & lIdEquipo)>0 Then\n      CargaGridEquiposEmpleados(lIdEquipo)\n    Else\n      gForm.Controls(\"grdEmpleados\").LimpiaGrid\n    End If\n  End If\nEnd Sub\n\nSub CargaGridProyectosEquipos (IdEquipo)\n    gForm.Controls(\"grdProyectos\").LimpiaGrid \n   With gForm.Controls(\"grdProyectos\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 0, \"IdEq\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where IdEquipo = \" & IdEquipo\n' .AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n   .AgregaColumna \"IdProyecto\", 3000, \"Proyecto\", False, \"Select IdProyecto as ID, IdProyecto, Descrip from Proyectos \"\n  '.AgregaColumna \"@Proyecto\", 3000, \"Proyecto\", True, \"Select IdProyecto as ID, Descrip from Proyectos\"\n     .AgregaColumna \"Porcentaje\", 1000, \"%Proyecto\", False\n      .AgregaColumna \"IngresosEnero\", 1000, \"Ing. Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosFebrero\", 1000, \"Ing. Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMarzo\", 1000, \"Ing. Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAbril\", 1000, \"Ing. Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMayo\", 1000, \"Ing. Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJunio\", 1000, \"Ing. Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJulio\", 1000, \"Ing. Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAgosto\", 1000, \"Ing. Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosSeptiembre\", 1100, \"Ing. Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosOctubre\", 1000, \"Ing. Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosNoviembre\", 1100, \"Ing. Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosDiciembre\", 1000, \"Ing. Diciembre\", False,,,\"#,##0.00\"\n      \n  .Campo(\"IdEquipo\").Default = IdEquipo\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  '.Campo(\"@Proyecto\").Sustitucion = \"Select Descrip from Proyectos where IdProyecto = @IdProyecto\"\n  .Campo(\"IdProyecto\").coleccion = \"Proyectos\"\n  .Campo(\"IdProyecto\").ColeccionWhere = \"Where IdProyecto = @IdProyecto\"\n\n  \n\n     .From = \"Pers_Presupuestos_Equipos_Proyectos\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos_Proyectos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\" & \" AND IdEquipo = \" & IdEquipo\n     .AplicaEstilo\n     .Orden = \"IdProyecto\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdProyecto\", \"Select IdProyecto, Descrip from Proyectos\", False\n      \n      .MenuItemAdd \"Fijar Ingreso Mensual\",\"mnuPers_FijarIngresoMensualProyecto\", 0 , ,True, False, 123\n\n    \n  End With\nEnd Sub\n\nSub CargaGridEquiposProyectos (IdProyecto)\n  \n  gForm.Controls(\"grdEquipos2\").LimpiaGrid\n  With gForm.Controls(\"grdEquipos2\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdProyecto\",0,\"IdProyecto\"\n     .AgregaColumna \"IdEquipo\", 3000, \"Equipo\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where Staff = 0\"\n  '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n     .AgregaColumna \"Porcentaje\", 1000, \"%Proyecto\", False\n      .AgregaColumna \"IngresosEnero\", 1000, \"Ing. Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosFebrero\", 1000, \"Ing. Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMarzo\", 1000, \"Ing. Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAbril\", 1000, \"Ing. Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosMayo\", 1000, \"Ing. Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJunio\", 1000, \"Ing. Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosJulio\", 1000, \"Ing. Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosAgosto\", 1000, \"Ing. Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosSeptiembre\", 1100, \"Ing. Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosOctubre\", 1000, \"Ing. Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosNoviembre\", 1100, \"Ing. Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"IngresosDiciembre\", 1000, \"Ing. Diciembre\", False,,,\"#,##0.00\"\n      \n  '.Campo(\"@Equipo\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipo\"\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  .Campo(\"IdProyecto\").Default = IdProyecto\n\n     .From = \"Pers_Presupuestos_Equipos_Proyectos\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos_Proyectos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"' AND IdProyecto = '\" & IdProyecto & \"'\"\n     .AplicaEstilo\n     .Orden = \"IdEquipo\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n    .ValueItems \"IdEquipo\", \"Select IdEquipo, Descrip from Pers_Equipos\", False\n    \n     .MenuItemAdd \"Fijar Ingreso Mensual\",\"mnuPers_FijarIngresoMensualProyecto\", 0 , ,True, False, 123\n\n      \n  End With\nEnd Sub\n\n\nSub CargaGridGastosEquiposStaffyOtros (IdEquipo)\n    gForm.Controls(\"grdEquiposStaff\").LimpiaGrid \n   With gForm.Controls(\"grdEquiposStaff\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 0, \"IdEq\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where IdEquipo = \" & IdEquipo\n' .AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n   .AgregaColumna \"IdEquipoStaff\", 3000, \"Equipo Staff\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where staff = 1 \"\n  '.AgregaColumna \"@EquipoStaff\", 3000, \"Eq. Staff\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n      .AgregaColumna \"GastosEnero\", 1000, \"Gasto Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosFebrero\", 1000, \"Gasto Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosMarzo\", 1000, \"Gasto Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosAbril\", 1000, \"Gasto Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosMayo\", 1000, \"Gasto Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosJunio\", 1000, \"Gasto Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosJulio\", 1000, \"Gasto Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosAgosto\", 1000, \"Gasto Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosSeptiembre\", 1100, \"Gasto Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosOctubre\", 1000, \"Gasto Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosNoviembre\", 1100, \"Gasto Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosDiciembre\", 1000, \"Gasto Diciembre\", False,,,\"#,##0.00\"\n      \n  .Campo(\"IdEquipo\").Default = IdEquipo\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  '.Campo(\"@EquipoStaff\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipoStaff\"\n\n  \n\n     .From = \"Pers_Presupuestos_Equipos_GastosStaff\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos_GastosStaff\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\" & \" AND IdEquipo = \" & IdEquipo\n     .AplicaEstilo\n     .Orden = \"IdEquipoStaff\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      \n    .ValueItems \"IdEquipoStaff\",\"Select IdEquipo, Descrip from Pers_Equipos\", False\n    \n     .MenuItemAdd \"Fijar Gasto Staff Mensual\",\"mnuPers_FijarGastoStaffMensual\", 0 , ,True, False, 123\n\n    \n  End With\n    \n  gForm.Controls(\"grdGastosOtros\").LimpiaGrid \n   With gForm.Controls(\"grdGastosOtros\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 0, \"IdEq\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where IdEquipo = \" & IdEquipo\n' .AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n  ' .AgregaColumna \"IdTipoGasto\", 3000, \"Gasto\", False, \"Select IdTipoGasto as ID, IdTipoGasto, Descrip from TiposGastos_Definiciones  \"\n       .AgregaColumna \"IdTipoGasto\", 3000, \"Gasto\", False, \"Select IdTipoGasto as ID, IdTipoGasto, Descrip from TiposGastos_Definiciones  \"\n  '.AgregaColumna \"@EquipoStaff\", 3000, \"Eq. Staff\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n      .AgregaColumna \"GastosEnero\", 1000, \"Gasto Enero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosFebrero\", 1000, \"Gasto Febrero\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosMarzo\", 1000, \"Gasto Marzo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosAbril\", 1000, \"Gasto Abril\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosMayo\", 1000, \"Gasto Mayo\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosJunio\", 1000, \"Gasto Junio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosJulio\", 1000, \"Gasto Julio\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosAgosto\", 1000, \"Gasto Agosto\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosSeptiembre\", 1100, \"Gasto Septiembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosOctubre\", 1000, \"Gasto Octubre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosNoviembre\", 1100, \"Gasto Noviembre\", False,,,\"#,##0.00\"\n      .AgregaColumna \"GastosDiciembre\", 1000, \"Gasto Diciembre\", False,,,\"#,##0.00\"\n      \n  .Campo(\"IdEquipo\").Default = IdEquipo\n  .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  '.Campo(\"@EquipoStaff\").Sustitucion = \"Select Descrip from Pers_Equipos where IdEquipo = @IdEquipoStaff\"\n\n  \n\n     .From = \"Pers_Presupuestos_Equipos_Gastos\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos_Gastos\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\" & \" AND IdEquipo = \" & IdEquipo\n     .AplicaEstilo\n     .Orden = \"IdTipoGasto\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdTipoGasto\", \"Select IdTipoGasto, Descrip from TiposGastos_Definiciones\", False\n      \n      .MenuItemAdd \"Fijar Gasto Otros Mensual\",\"mnuPers_FijarGastoOtrosMensual\", 0 , ,True, False, 123\n\n      \n  End With\nEnd Sub\n\n\nSub CargaGridEquiposEmpleados (IdEquipo)\n    gForm.Controls(\"grdEmpleados\").LimpiaGrid \n   With gForm.Controls(\"grdEmpleados\")       \n        \n     .Agregar = True\n     .Editar = True\n     .Eliminar = True\n     .CargaObjetos = False\n     .EditarPorObjeto = False\n     \n\n     .AgregaColumna \"IdPresupuesto\", 0, \"IdPresupuesto\"\n     .AgregaColumna \"IdEquipo\", 0, \"IdEq\", False, \"Select IdEquipo as ID, IdEquipo, Descrip from Pers_Equipos where IdEquipo = \" & IdEquipo\n    '.AgregaColumna \"@Equipo\", 3000, \"Equipo\", True, \"Select IdEquipo as ID, Descrip from Pers_Equipos\"\n     .AgregaColumna \"IdEmpleado\", 3000, \"Empleado\", False, \"Select IdEmpleado as ID, IdEmpleado, NombreCompleto from vEmpleados_Datos \"\n   '.AgregaColumna \"@Proyecto\", 3000, \"Proyecto\", True, \"Select IdProyecto as ID, Descrip from Proyectos\"\n     .AgregaColumna \"PorcDedicacion\", 1000, \"%Dedicacion\", False\n\n      \n    .Campo(\"IdEquipo\").Default = IdEquipo\n    .Campo(\"PorcDedicacion\").Default = 100\n    .Campo(\"IdPresupuesto\").Default = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n    '.Campo(\"@Proyecto\").Sustitucion = \"Select Descrip from Proyectos where IdProyecto = @IdProyecto\"\n    .campo (\"IdEmpleado\").coleccion = \"Empleados\"\n    .Campo (\"IdEmpleado\").ColeccionWhere = \"Where IdEmpleado = @IdEmpleado\"\n    .AgregaColumna \"GastosEnero\", 1000, \"Gasto Enero\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosFebrero\", 1000, \"Gasto Febrero\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosMarzo\", 1000, \"Gasto Marzo\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosAbril\", 1000, \"Gasto Abril\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosMayo\", 1000, \"Gasto Mayo\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosJunio\", 1000, \"Gasto Junio\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosJulio\", 1000, \"Gasto Julio\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosAgosto\", 1000, \"Gasto Agosto\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosSeptiembre\", 1100, \"Gasto Septiembre\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosOctubre\", 1000, \"Gasto Octubre\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosNoviembre\", 1100, \"Gasto Noviembre\", False,,,\"#,##0.00\"\n    .AgregaColumna \"GastosDiciembre\", 1000, \"Gasto Diciembre\", False,,,\"#,##0.00\"\n  \n\n     .From = \"Pers_Presupuestos_Equipos_Empleados\" \n     .TablaObjeto = \"Pers_Presupuestos_Equipos_Empleados\"\n     .Where = \" WHERE IdPresupuesto = '\"& gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\") &\"'\" & \" AND IdEquipo = \" & IdEquipo\n     .AplicaEstilo\n     .Orden = \"IdProyecto\"\n     .Refrescar\n     .Refresca = True  \n\n      .ActivarScripts = True \n      .ValueItems \"IdEmpleado\", \"Select IdEmpleado, NombreCompleto from VEmpleados_Datos\", False\n      \n      \n    \n  End With\nEnd Sub\n\n\nSub Grid_MenuAfterExecute(aGrid,aMenuItem)\n  If aMenuItem.Name = \"mnuPers_FijarIngresoMensualProyecto\" Then\n    lIdPresupuesto = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n  lIdProyecto = aGrid.GetValue(\"IdProyecto\")\n    If Len(\"\" & lIdPresupuesto & lIdEquipo & lIdProyecto) = 0 Then\n      MsgBox \"Debe seleccionar un proyecto de un equipo\"\n      Exit Sub\n    End If\n    IngresoMensual = InputBox(\"Introduzca el importe del Ingreso Mensual\")\n      \n      If IsNumeric(IngresoMensual) = False Then\n        MsgBox \"El formato del importe introducido no es correcto\"\n        eCancel = True\n    Exit Sub\n     End If\n    FijarIngresoMensualProyecto lIdPresupuesto,lIdEquipo, lIdProyecto, IngresoMensual\n  aGrid.Refrescar\n  gForm.Controls(\"grdEquipos\").Refrescar\n  gForm.Controls(\"grdProyectos2\").Refrescar\n  End If\n  \n  If aMenuItem.Name = \"mnuPers_FijarGastoPersonalMensual\" Then\n    lIdPresupuesto = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n  If Len(\"\" & lIdEquipo ) = 0 Then\n      MsgBox \"Debe seleccionar un equipo\"\n      Exit Sub\n    End If\n    GastoMensual = InputBox(\"Introduzca el importe del Gasto Mensual\")\n      \n      If IsNumeric(GastoMensual) = False Then\n        MsgBox \"El formato del importe introducido no es correcto\"\n        eCancel = True\n    Exit Sub\n     End If\n    FijarGastoPersonalMensual lIdPresupuesto,lIdEquipo, GastoMensual\n  aGrid.Refrescar\n  End If\n  If aMenuItem.Name = \"mnuPers_FijarGastoStaffMensual\" Then\n    lIdPresupuesto = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n  lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n  lIdEquipoStaff = aGrid.GetValue(\"IdEquipoStaff\")\n    If Len(\"\" & lIdPresupuesto & lIdEquipo & lIdEquipoStaff) = 0 The\n    n\n      MsgBox \"Debe seleccionar un equipo operativo y un equipo de STAFF\"\n      Exit Sub\n    End If\n       GastoMensual = InputBox(\"Introduzca el importe del Gasto Mensual\")\n      \n      If IsNumeric(GastoMensual) = False Then\n        MsgBox \"El formato del importe introducido no es correcto\"\n        eCancel = True\n    Exit Sub\n     End If\n    FijarGastoStaffMensual lIdPresupuesto,lIdEquipo, lIdEquipoStaff, GastoMensual\n  aGrid.Refrescar\n  End If\n  \n  If aMenuItem.Name = \"mnuPers_FijarGastoOtrosMensual\" Then\n  lIdPresupuesto = gForm.Controls(\"EObjeto\").ObjGlobal.Propiedades(\"IdPresupuesto\")\n    lIdEquipo = aGrid.GetValue(\"IdEquipo\")\n  lIdTipoGasto = aGrid.GetValue(\"IdTipoGasto\")\n    If Len(\"\" & lIdEquipo & lIdTipoGasto) = 0 Then\n      MsgBox \"Debe seleccionar un tipo de gasto de un equipo\"\n      Exit Sub\n    End If\n        GastoMensual = InputBox(\"Introduzca el importe del Gasto Mensual\")\n      \n      If IsNumeric(GastoMensual) = False Then\n        MsgBox \"El formato del importe introducido no es correcto\"\n        eCancel = True\n    Exit Sub\n     End If\n    FijarGastoOtrosMensual lIdPresupuesto, lIdEquipo, lIdTipoGasto, GastoMensual\n  aGrid.Refrescar\n  End If\nEnd Sub\n\nSub FijarIngresoMensualProyecto (lIdPresupuesto,lIdEquipo, lIdProyecto, IngresoMensual)\n  Set lColParam = gcn.dameNewCollection\n    lColParam.Add lIdPresupuesto\n  lColParam.Add lIdEquipo\n  lColParam.Add lIdProyecto\n  lColParam.Add IngresoMensual\n  'lColParam.Add \"\"\n\n    If gCn.EjecutaStoreCol(\"pPers_FijarIngresoMensualProyecto\",lColParam) = True Then\n      MsgBox \"Ingresos modificados correctamente\"\n    Else\n      If Len(\"\" & CStr(lColParam.Item(2))) > 0 Then\n      MsgBox \"Error modificando ingresos\" & vbcrlf & CStr(lColParam.Item(2))\n    End If\n    End If  \nEnd Sub\n\nSub FijarGastoPersonalMensual(lIdPresupuesto,lIdEquipo, GastoMensual)\nSet lColParam = gcn.dameNewCollection\n    lColParam.Add lIdPresupuesto\n  lColParam.Add lIdEquipo\n  lColParam.Add GastoMensual\n  'lColParam.Add \"\"\n\n    If gCn.EjecutaStoreCol(\"pPers_FijarGastoPersonalMensual\",lColParam) = True Then\n      MsgBox \"Ingresos modificados correctamente\"\n    Else\n      If Len(\"\" & CStr(lColParam.Item(2))) > 0 Then\n      MsgBox \"Error modificando ingresos\" & vbcrlf & CStr(lColParam.Item(2))\n    End If\n    End If \nEnd Sub\n\nSub FijarGastoStaffMensual(lIdPresupuesto,lIdEquipo, lIdEquipoStaff, GastoMensual)\nSet lColParam = gcn.dameNewCollection\n    lColParam.Add lIdPresupuesto\n  lColParam.Add lIdEquipo\n  lColParam.Add lIdEquipoStaff\n  lColParam.Add GastoMensual\n  'lColParam.Add \"\"\n\n    If gCn.EjecutaStoreCol(\"pPers_FijarGastoStaffMensual\",lColParam) = True Then\n      MsgBox \"Gastos modificados correctamente\"\n    Else\n      If Len(\"\" & CStr(lColParam.Item(2))) > 0 Then\n      MsgBox \"Error modificando gastos\" & vbcrlf & CStr(lColParam.Item(2))\n    End If\n    End If \nEnd Sub\n\nSub FijarGastoOtrosMensual(lIdPresupuesto, lIdEquipo, lIdTipoGasto, GastoMensual)\nSet lColParam = gcn.dameNewCollection\n    lColParam.Add lIdPresupuesto\n  lColParam.Add lIdEquipo\n  lColParam.Add lIdTipoGasto\n  lColParam.Add GastoMensual\n  'lColParam.Add \"\"\n\n    If gCn.EjecutaStoreCol(\"pPers_FijarGastoOtrosMensual\",lColParam) = True Then\n      MsgBox \"Gastos modificados correctamente\"\n    Else\n      If Len(\"\" & CStr(lColParam.Item(2))) > 0 Then\n      MsgBox \"Error modificando gastos\" & vbcrlf & CStr(lColParam.Item(2))\n    End If\n    End Iff \nEnd Sub\n\n\nSub Botonera_AfterExecute(aBotonera, aBoton)\n  If (aBoton.Name = \"btnRefrescarTodo\") And Not gForm.Eobjeto.ObjGlobal.Nuevo Then\n    gForm.Controls(\"grdEquipos\").Refrescar\n    gForm.Controls(\"grdProyectos\").Refrescar\n    gForm.Controls(\"grdProyectos2\").Refrescar\n    gForm.Controls(\"grdEquipos2\").Refrescar\n    gForm.Controls(\"grdEquiposGastos\").Refrescar\n    gForm.Controls(\"grdEquiposStaff\").Refrescar\n    gForm.Controls(\"grdGastosOtros\").Refrescar\n    gForm.Controls(\"grdIngresosFinal\").Refrescar\n    gForm.Controls(\"grdGastosFinal\").Refrescar\n    gForm.Controls(\"grdMargenFinal\").Refrescar\n    gForm.Controls(\"grdEquiposEmpleados\").Refrescar\n    gForm.Controls(\"grdEmpleados\").Refrescar\n    \n  End If\nEnd Sub",
+			"file": "VbScript ERP/PresupuestoGestion.vbs",
+			"file_size": 49348,
+			"file_write_time": 130808328976830004,
 			"settings":
 			{
-				"buffer_size": 899,
+				"buffer_size": 48167,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "begin tran\n\ninsert into Proyectos (IdProyecto, Descrip, Fecha, IdEstado, Tipo, IdSituacion, IdDepartamento, SeguimientosTareas, IdDelegacion)\nSELECT RIGHT('00000'+cast(IdProyecto as nvarchar(10)),4), Proyecto, GETDATE(), 0, '(Sin definir)', 0,0,0,-1\nfrom OPENROWSET('Microsoft.ACE.OLEDB.12.0',\n'Excel 12.0;HDR=YES;Database=C:\\TEMP\\Maestro.xlsx;',\n'SELECT * FROM [Proyecto$]') where RIGHT('00000'+cast(IdProyecto as nvarchar(10)),4) not in (select IdProyecto from Proyectos)\n\nUPDATE Proyectos set IdProveedor = RIGHT('00000'+cast(x.IdTercero as nvarchar(10)),5)\nfrom OPENROWSET('Microsoft.ACE.OLEDB.12.0',\n'Excel 12.0;HDR=YES;Database=C:\\TEMP\\Maestro.xlsx;',\n'SELECT * FROM [Definitivo$]') x\nwhere Proyectos.IdProyecto = x.IdProyecto\nand x.IdTercero is not null and x.IdTercero <> '#N/A' and x.IdTercero <> ''\n\nupdate Conf_Proyectos set Pers_PorcentajeTercero = 40\nwhere IdProyecto in (select IdProyecto from Proyectos where IdProveedor is not null)\n\nupdate Conf_Proyectos set IdProyectoPadre = case when x.proyecto = 'TALKING' Then '0048'\n												 when x.proyecto = 'PT GOLD' or x.proyecto = 'PT CLASSIC' Then '0034'\n												 end\nfrom OPENROWSET('Microsoft.ACE.OLEDB.12.0',\n'Excel 12.0;HDR=YES;Database=C:\\TEMP\\Maestro.xlsx;',\n'SELECT * FROM [Definitivo$]') x\nwhere Conf_Proyectos.IdProyecto = RIGHT('00000'+cast(x.IdProyecto as nvarchar(10)),4)\nand x.Proyecto in ('PT CLASSIC','PT GOLD','TALKING')\n\n\ncommit tran\n\n",
-			"file": "Scripts migracion datos/INSERT Proyectos.sql",
-			"file_size": 1448,
-			"file_write_time": 130796207247244558,
+			"contents": "=SI(D2<500;\"INF\";\n	SI(D2>500 Y D2<1000;\"MED\";\n		SI(D2>1000 Y D2< 1500;\"MEDSUP\";\n			\"SUP\")))",
 			"settings":
 			{
-				"buffer_size": 1422,
+				"buffer_size": 91,
+				"line_ending": "Windows",
+				"name": "=SI(D2<500;\"INF\";"
+			}
+		},
+		{
+			"file": "/C/Users/Gaetan/Dropbox/ITCON-TECNICOS/GENERA/Email Gaetan/pPers_Nominas_Importar.sql",
+			"settings":
+			{
+				"buffer_size": 17654,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Scripts migracion datos/INSERT_UPDATE Proveedores.sql",
+			"file": "/C/Users/Gaetan/Dropbox/ITCON-TECNICOS/GENERA/Email Gaetan/CtrolF10ImportacionNomina.vb",
 			"settings":
 			{
-				"buffer_size": 728,
+				"buffer_size": 7958,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Scripts migracion datos/INSERT Equipos.sql",
+			"file": "/C/Users/Gaetan/Dropbox/ITCON-TECNICOS/GENERA/Email Gaetan/CtrlF10FormularioNomina.vb",
 			"settings":
 			{
-				"buffer_size": 293,
+				"buffer_size": 8123,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Scripts migracion datos/INSERT Pers_Presupuesto_Equipos_Proyectos.sql",
+			"file": "VbScript ERP/IngresoAgencia.vbs",
 			"settings":
 			{
-				"buffer_size": 1610,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Scripts migracion datos/INSERT Pers_Proyectos_Agencias_Ingresos.sql",
-			"settings":
-			{
-				"buffer_size": 444,
+				"buffer_size": 14089,
 				"line_ending": "Windows"
 			}
 		}
@@ -102,13 +167,61 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
-		"last_filter": "git st",
+		"height": 58.0,
+		"last_filter": "vbsc",
 		"selected_items":
 		[
 			[
-				"git st",
+				"vbsc",
+				"Set Syntax: VBScript"
+			],
+			[
+				"git s",
 				"Git: Status"
+			],
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"sql",
+				"Set Syntax: SQL"
+			],
+			[
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"git add",
+				"Git: Add Current File"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"git diff",
+				"Git: Diff Current File"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Add Channel"
+			],
+			[
+				"git quick co",
+				"Git: Quick Commit"
+			],
+			[
+				"git di",
+				"Git: Diff Current File"
+			],
+			[
+				"git ",
+				"Git: Graph All"
 			],
 			[
 				"git qui",
@@ -116,11 +229,31 @@
 			],
 			[
 				"git co",
-				"Git: Commit history"
+				"Git: Commit"
 			],
 			[
-				"git ",
-				"Git: Quick Commit"
+				"git st",
+				"Git: Status"
+			],
+			[
+				"comm",
+				"Git: Commit"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"git com",
+				"Git: Commit"
+			],
+			[
+				"gitdiff ",
+				"Git: Diff Tool Current File"
+			],
+			[
+				"git commit",
+				"Git: Commit"
 			],
 			[
 				"git pus",
@@ -143,28 +276,12 @@
 				"Git: Init"
 			],
 			[
-				"install",
-				"Package Control: Install Package"
-			],
-			[
-				"git di",
-				"Git: Diff Current File"
-			],
-			[
-				"vbsc",
-				"Set Syntax: VBScript"
-			],
-			[
 				"java",
 				"Set Syntax: JavaScript"
 			],
 			[
 				"vb",
 				"Set Syntax: VBScript"
-			],
-			[
-				"sql",
-				"Set Syntax: SQL"
 			],
 			[
 				"SQL",
@@ -191,7 +308,7 @@
 				"Set Syntax: JavaScript"
 			]
 		],
-		"width": 400.0
+		"width": 528.0
 	},
 	"console":
 	{
@@ -210,28 +327,57 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP"
+	],
 	"file_history":
 	[
+		"/C/Users/Gaetan/Downloads/Telegram Desktop/cambio divisas.vbs",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/pPERS_Get_Cambio_DelDia_EuroDolar.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Pers_Presupuestos_Gastos_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Presupuestos_Equipos_Proyectos_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Pers_Presupuestos_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Pers_Presupuestos_Equipos_GastosStaff_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Pers_Presupuestos_Equipos_Gastos_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Pers_Presupuestos_Equipos_Empleados_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_Pers_Presupuestos_Equipos_UTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP/GastoAgencia.vbs",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP/PresupuestoGestion.vbs",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/pPers_CrearEstructuraPresupuesto.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/LIMPIAR Base de datos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP/Favorito Crear nuevo presupuesto.vbs",
+		"/C/Users/Gaetan/OneDrive/ITCON/UTILS/Restaurar una base de datos.txt",
+		"/C/Users/Gaetan/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Trigger/Pers_GastosAgencia_Cabecera_DTrig.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/PPers_GenerarPedidoProveedor_From_Gastos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP/Proyectos.vbs",
+		"/C/Users/Gaetan/Documents/Software/TechSmith Snagit v12.1.0 build 1322 Incl Keygen-TSZ [TorDigger]/ReadMe!.txt",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/pPers_DesgloceLinea_Pedidos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/PPers_GenerarPedidoCliente_From_Ingreso.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/PPERS_PPedidos_Prov_Lineas_I.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/PPers_PPedidos_Cli_Lineas_I.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Stored/PPers_GenerarPedidoProveedor_From_Ingreso.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Equipos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP/Presupuesto.vbs",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/VbScript ERP/IngresoAgencia.vbs",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Proyectos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT_UPDATE Clientes.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Pers_Proyectos_Agencias_Ingresos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Pers_Presupuesto_Equipos_Proyectos.sql",
+		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT_UPDATE Proveedores.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/INSERT_UPDATE Clientes.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/INSERT Proyectos.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/INSERT Pers_Proyectos_Agencias_Ingresos.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/INSERT Pers_Presupuesto_Equipos_Proyectos.sql",
-		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Equipos.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/INSERT_UPDATE Proveedores.sql",
-		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Pers_Presupuesto_Equipos_Proyectos.sql",
-		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Proyectos.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/INSERT Equipos.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/PROYECTOS/GENERA/Scripts migracion datos/LIMPIAR Base de datos.sql",
-		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT_UPDATE Proveedores.sql",
-		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT_UPDATE Clientes.sql",
-		"/C/Users/Gaetan/Documents/GitHub/Genera/Genera/Scripts migracion datos/INSERT Pers_Proyectos_Agencias_Ingresos.sql",
 		"/C/Users/Gaetan/OneDrive/ITCON/Svn Proyectos/README.txt",
 		"/C/Users/Gaetan/OneDrive/ITCON/BACKUP/Back up Dev Ingreso Agencia.sql",
-		"/C/Users/Gaetan/Downloads/Telegram Desktop/cambio divisas.vbs",
 		"/C/Users/Gaetan/OneDrive/ITCON/Stored para obtener el cambio Euro-Dolar del dia desde ECB.txt",
 		"/C/Users/Gaetan/OneDrive/ITCON/Obtener cambio del dia desde EBC.txt",
 		"/C/Users/Gaetan/OneDrive/ITCON/Get Cambio from Banco.txt",
-		"/C/Users/Gaetan/OneDrive/ITCON/UTILS/Restaurar una base de datos.txt",
 		"/C/Users/Gaetan/Downloads/xinput1_3/readme.txt",
 		"/C/Users/Gaetan/OneDrive/ITCON/UTILS/Ejemplo regla de color.js",
 		"/C/Users/Gaetan/Downloads/Watch.Dogs.Bad.Blood.DLC-RELOADED/RARBG.com.txt",
@@ -242,11 +388,11 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 90.0,
 		"where_history":
 		[
 		]
@@ -256,6 +402,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Pers_Presupuestos_Equipos_Gastos",
+			"Pers_Presupuestos_Gastos",
+			"inportacion",
+			"importe",
 			"activa",
 			"Gastos",
 			"refresh",
@@ -316,141 +466,60 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Scripts migracion datos/INSERT_UPDATE Clientes.sql",
+					"file": "VbScript ERP/PresupuestoGestion.vbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 899,
+						"buffer_size": 48167,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								899,
-								899
+								44058,
+								44058
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/SQL/SQL.tmLanguage"
+							"syntax": "Packages/VBScript/VBScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Scripts migracion datos/INSERT Proyectos.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1422,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								863,
-								863
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Scripts migracion datos/INSERT_UPDATE Proveedores.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 728,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								728,
-								728
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Scripts migracion datos/INSERT Equipos.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 293,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 21015.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "Scripts migracion datos/INSERT Pers_Presupuesto_Equipos_Proyectos.sql",
+					"buffer": 1,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1610,
+						"buffer_size": 91,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								91,
+								91
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/SQL/SQL.tmLanguage"
+							"auto_name": "=SI(D2<500;\"INF\";",
+							"default_dir": "C:\\Users\\Gaetan\\Documents\\GitHub\\Genera\\Genera\\Scripts migracion datos",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -460,31 +529,122 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "Scripts migracion datos/INSERT Pers_Proyectos_Agencias_Ingresos.sql",
+					"buffer": 2,
+					"file": "/C/Users/Gaetan/Dropbox/ITCON-TECNICOS/GENERA/Email Gaetan/pPers_Nominas_Importar.sql",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 444,
+						"buffer_size": 17654,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								361,
+								361
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/SQL/SQL.tmLanguage"
+							"syntax": "Packages/SQL/SQL.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/Users/Gaetan/Dropbox/ITCON-TECNICOS/GENERA/Email Gaetan/CtrolF10ImportacionNomina.vb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7958,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1250,
+								1250
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/VBScript/VBScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 360.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/Gaetan/Dropbox/ITCON-TECNICOS/GENERA/Email Gaetan/CtrlF10FormularioNomina.vb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8123,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7724,
+								7724
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/VBScript/VBScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3600.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "VbScript ERP/IngresoAgencia.vbs",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 14089,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9850,
+								9853
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/VBScript/VBScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4320.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -533,7 +693,7 @@
 	"project": "Project-Genera.sublime-project",
 	"replace":
 	{
-		"height": 80.0
+		"height": 52.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -547,12 +707,16 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"C:\\Users\\Gaetan\\Documents\\GitHub\\Sevimex\\Desarrollo_Sevimex.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
@@ -571,7 +735,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 188.0,
+	"side_bar_width": 294.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
