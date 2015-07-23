@@ -1,6 +1,6 @@
 USE [GENERA]
 GO
-/****** Object:  StoredProcedure [dbo].[pPERS_DesgloceLinea_Pedidos]    Script Date: 29/06/2015 18:17:36 ******/
+/****** Object:  StoredProcedure [dbo].[pPERS_DesgloceLinea_Pedidos]    Script Date: 15/07/2015 14:30:03 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -81,6 +81,16 @@ DECLARE @CentroCoste	T_Id_CentroCoste
  
 		CLOSE cursor_desgloceAnalitico
 		DEALLOCATE cursor_desgloceAnalitico
+
+		-- Nuevo proceso despues de crear la definicion de los centros de costes en CentrosCoste_Objetos
+		-- Tenemos que definir en Conta_CentrosCoste los centros de coste que existan en CentrosCoste_Objetos pero no en Conta_CentrosCoste
+		-- Al final del cursor de insercion de los centros de costes en CentrosCoste_Objetos, insertamos en Conta_CentrosCoste
+
+		INSERT INTO Conta_CentrosCoste(IdCentroCoste, Descrip, Bloqueado, FechaBloqueo, MotivoBloqueo)
+		SELECT DISTINCT cc.CentroCoste, 'C.C. ' + pe.Descrip +' '+ po.Descrip, 0, NULL,NULL FROM CentrosCoste_Objetos cc
+		INNER JOIN Pers_Equipos pe ON pe.idEquipo = LEFT(cc.CentroCoste,2)
+		INNER JOIN Proyectos po ON po.IdProyecto = RIGHT(cc.CentroCoste, 4)
+		WHERE cc.CentroCoste NOT IN (SELECT IdCentroCoste FROM Conta_CentrosCoste)
 
 		RETURN -1
 
