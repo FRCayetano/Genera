@@ -258,41 +258,42 @@ WHERE P.IdImportacion = @IdImportacion
 /*INSERT INTO @LOSEMPLEADOS(IdEmpleado, IdCentroCoste)
 SELECT DISTINCT IdEmpleado, IdCentroCoste 
 FROM vPers_Empleados_Horas_CC_Porcentajes
-WHERE Anyo = Year(@Fecha) AND Mes = Month(@Fecha)
+WHERE Anyo = Year(@Fecha) AND Mes = Month(@Fecha)*/
+
+
+--Miramos si la nomina que queremos contabilizar ya esta asociada a un asiento
+IF (SELECT Count(*) FROM vPers_Imputacion_Empleado_Nominas WHERE IdImportacion=@IdImportacion) = 0 BEGIN
+	RAISERROR ('El EXCEL DE REPARTO DE CADA EMPLEADO A CADA PROYECTO PARA ESTE MES NO HA SIDO IMPORTADO', 12, 1)
+END
 
 INSERT INTO Conta_CentrosCoste (IdCentroCoste, Descrip, Bloqueado)
-SELECT DISTINCT I.IdCentroCoste, 'C. C. ' + CAST(I.IdCentroCoste AS varchar), 0
-FROM @LOSEMPLEADOS I
+SELECT DISTINCT I.IdCentroCoste, I.CC_Descrip, 0
+FROM vPers_Imputacion_Empleado_Nominas I
 LEFT JOIN Conta_CentrosCoste C ON I.IdCentroCoste = C.IdCentroCoste 
 WHERE C.IdCentroCoste IS NULL
-
-INSERT INTO Conta_CentrosCoste (IdCentroCoste, Descrip, Bloqueado)
-SELECT DISTINCT I.IdCentroCoste, 'C. C. ' + CAST(I.IdCentroCoste AS varchar), 0
-FROM @IMPORTES I
-LEFT JOIN Conta_CentrosCoste C ON I.IdCentroCoste = C.IdCentroCoste 
-WHERE C.IdCentroCoste IS NULL
+AND I.IdImportacion = @IdImportacion
 
 INSERT INTO Conta_CentrosCoste_Linea(IdEjercicio, IdAsiento, IdApunte, CentroCoste, Importe_Euros)
-SELECT @IdEjercicio, I.Asiento640, I.Apunte640, L.IdCentroCoste, ABS(ROUND(((I.Importe_Bruto * L.Porcentaje) /100.0), 2))
+SELECT @IdEjercicio, I.Asiento640, I.Apunte640, L.IdCentroCoste, L.Bruto_ImporteEquipo
 FROM  @IMPORTES I
-INNER JOIN vPers_Empleados_Horas_CC_Porcentajes L ON I.IdEmpleado = L.IdEmpleado 
-WHERE Anyo = Year(@Fecha) AND Mes = Month(@Fecha)
+INNER JOIN vPers_Imputacion_Empleado_Nominas L ON I.IdEmpleado = L.IdEmpleado 
+WHERE L.IdImportacion = @IdImportacion
 
-INSERT INTO Conta_CentrosCoste_Linea(IdEjercicio, IdAsiento, IdApunte, CentroCoste, Importe_Euros)
+/*INSERT INTO Conta_CentrosCoste_Linea(IdEjercicio, IdAsiento, IdApunte, CentroCoste, Importe_Euros)
 SELECT @IdEjercicio, I.Asiento640, I.Apunte640, I.IdCentroCoste, ABS(I.Importe_Bruto)
 FROM  @IMPORTES I
-WHERE I.IdEmpleado Not IN (SELECT IdEmpleado FROM @LOSEMPLEADOS)
+WHERE I.IdEmpleado Not IN (SELECT IdEmpleado FROM @LOSEMPLEADOS)*/
 
 INSERT INTO Conta_CentrosCoste_Linea(IdEjercicio, IdAsiento, IdApunte, CentroCoste, Importe_Euros)
-SELECT @IdEjercicio, I.Asiento642, I.Apunte640, L.IdCentroCoste, ABS(ROUND(((I.Importe_SS * L.Porcentaje) /100.0), 2))
+SELECT @IdEjercicio, I.Asiento642, I.Apunte640, L.IdCentroCoste, L.Total_Coste_SS_ImporteEquipo
 FROM  @IMPORTES I
-INNER JOIN vPers_Empleados_Horas_CC_Porcentajes L ON I.IdEmpleado = L.IdEmpleado 
-WHERE Anyo = Year(@Fecha) AND Mes = Month(@Fecha)
+INNER JOIN vPers_Imputacion_Empleado_Nominas L ON I.IdEmpleado = L.IdEmpleado 
+WHERE L.IdImportacion = @IdImportacion
 
-INSERT INTO Conta_CentrosCoste_Linea(IdEjercicio, IdAsiento, IdApunte, CentroCoste, Importe_Euros)
+/*INSERT INTO Conta_CentrosCoste_Linea(IdEjercicio, IdAsiento, IdApunte, CentroCoste, Importe_Euros)
 SELECT @IdEjercicio, I.Asiento642, I.Apunte640, I.IdCentroCoste, ABS(I.Importe_SS)
 FROM  @IMPORTES I
-WHERE I.IdEmpleado Not IN (SELECT IdEmpleado FROM @LOSEMPLEADOS)
+WHERE I.IdEmpleado Not IN (SELECT IdEmpleado FROM @LOSEMPLEADOS)*/
 
 --AJUSTO LOS DESCUADRES ENTRE CONTABILIDAD Y ANALITICA POR REDONDEO
 INSERT INTO @APUNTES_DESCUADRADOS (Asiento, Apunte, Importe)
@@ -317,7 +318,7 @@ UPDATE @APUNTES_DESCUADRADOS SET IdDoc = dbo.fun_Pers_Max_CC_Importe(@IdEjercici
 
 UPDATE Conta_CentrosCoste_Linea SET Importe_Euros = ROUND(C.Importe_Euros, 2) + ROUND(A.Importe, 2)
 FROM Conta_CentrosCoste_Linea C
-INNER JOIN @APUNTES_DESCUADRADOS A ON C.IdDoc = A.IdDoc*/ 
+INNER JOIN @APUNTES_DESCUADRADOS A ON C.IdDoc = A.IdDoc
 
 COMMIT TRAN  
     
@@ -340,5 +341,3 @@ BEGIN CATCH
     RETURN 0
 
 END CATCH
-
-
