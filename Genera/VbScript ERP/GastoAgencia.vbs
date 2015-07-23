@@ -1,4 +1,11 @@
 Sub Show()
+
+  gForm.Controls("ComboUsuario")(2).Height = 300
+  gForm.Controls("TextoUsuario")(2).Height = 300
+  gForm.Controls("ComboUsuario")(1).Height = 300
+  gForm.Controls("TextoUsuario")(4).Height = 300
+  gForm.Controls("TextoUsuario")(5).Height = 300
+
   
   If gForm.Controls("EObjeto").ObjGlobal.Propiedades("IdGastoAgencia") = "" Then
   
@@ -9,22 +16,32 @@ Sub Show()
     gForm.Botonera.Boton("btGenerarPed").Visible = False
     gForm.Botonera.Boton("btVerPed").Visible = False
     
+    CrearGridAgenciaLineas
+    
   Else
 
+    CrearGridAgenciaLineas
+
     If gcn.dameValorCampo("select IdPedidoProv from Pers_GastosAgencia_Cabecera where IdGastoAgencia = "&gForm.Controls("TextoUsuario")(2).text&"") > 0 Then
-      gForm.Botonera.Boton("btGenerarPed").Visible = False
       gForm.Botonera.Boton("btVerPed").Visible = True
+      gForm.Botonera.Boton("btImportGasto").Visible = False
+      gForm.Botonera.Boton("btGenerarPed").Visible = False
+      BloquearGrid()
     Else
-      gForm.Botonera.Boton("btGenerarPed").Visible = True
       gForm.Botonera.Boton("btVerPed").Visible = False
+      gForm.Botonera.Boton("btImportGasto").Visible = True
+      gForm.Botonera.Boton("btGenerarPed").Visible = True
     End If
+    
+    If gcn.dameValorCampo("select count(*) from Pers_GastosAgencia_Lineas where IdGastoAgencia = "&gForm.Controls("TextoUsuario")(2).text&"") < 1 Then
+      gForm.Botonera.Boton("btGenerarPed").Visible = False
+    End If
+    
   End If
   
   gForm.Controls("TextoUsuario")(5).CaptionLink = True
   gForm.Controls("ComboUsuario")(1).CaptionLink = True
   gForm.Controls("ComboUsuario")(2).CaptionLink = True
-
-  CrearGridAgenciaLineas
 
 End Sub
 
@@ -65,8 +82,8 @@ Sub CrearGridAgenciaLineas()
       .AgregaColumna "IdGastoAgencia", 0, "IdGastoAgencia",False
       .AgregaColumna "IdGastoAgenciaLinea", 0, "IdGastoAgenciaLinea",False
       .AgregaColumna "IdProyecto", 2000, "Codigo proyecto",False
-      .AgregaColumna "IdProyectoAgencia", 2000, "Codigo proyecto interno a la agencia",False
-      .AgregaColumna "Importe", 1000, "Importe",False,,,"#,##0.00"
+      .AgregaColumna "IdProyectoAgencia", 3000, "Codigo proyecto interno a la agencia",False
+      .AgregaColumna "Importe", 1500, "Importe",False,,,"#,##0.00"
       .AgregaColumna "@DescripProyecto", 5000, "Descripcion",True
       
       .FROM = "Pers_GastosAgencia_Lineas"
@@ -107,10 +124,13 @@ Sub GenerarPedidosProveedor()
     
     If Not gcn.EjecutaStoreCol("PPers_GenerarPedidoProveedor_From_Gastos", lColparams) Then
       MsgBox "No se ha podido crear el pedido proveedor asociado al proyecto numero : "&larr(i,lgrd.colindex("IdProyecto"))&"" , vbCritical, "Error creando pedido cliente"
+      gForm.Botonera.Boton("btImportGasto").Visible = True
     Else
       MsgBox "Pedido proveedor generado" , vbInformation, "Informacion"
       gForm.Botonera.Boton("btGenerarPed").Visible = False
       gForm.Botonera.Boton("btVerPed").Visible = True
+      gForm.Botonera.Boton("btImportGasto").Visible = False
+      BloquearGrid()
     End If 
 End Sub
 
@@ -215,13 +235,12 @@ Sub ImportarExcel(lFichero )
       gForm.Botonera.Boton("btGenerarPed").Visible = True
     End If
     
-    If MsgBox("Importacion terminada, quereis ver el importe de importacion ?", vbYesNo, "Confirmacion") = vbYes Then
+    If MsgBox("Importacion terminada, quereis ver el importe de inportacion ?", vbYesNo, "Confirmacion") = vbYes Then
        AbrirFormImportacion(claveImportacion)
     End If
   End If
 
   gForm.Controls("GridAgenciaLineas").Refrescar
-
   gform.Eobjeto.Refresh
 
 End Sub
@@ -271,4 +290,21 @@ Function RandomString()
   RandomString = CStr(Int((max-min+1)*Rnd+min))
 End Function
 
+Sub BloquearGrid()
+  Set lGrid = gForm.Controls("GridAgenciaLineas")
+  
+  With lGrid
+    .Eliminar = False
+    .Agregar = False
+    .Editar = False
+  End With
+End Sub
 
+'Para Activar este evento hay que configurar la grid. Poner en el sub Initialize por ejemplo: gForm.grdLineas.ActivarScripts = True
+Sub Grid_AfterDelete(aGrid)
+  gform.Eobjeto.Refresh
+  
+  If gcn.dameValorCampo("select count(*) from Pers_GastosAgencia_Lineas where IdGastoAgencia = "&gForm.Controls("TextoUsuario")(2).text&"") < 1 Then
+    gForm.Botonera.Boton("btGenerarPed").Visible = False
+  End If
+End Sub

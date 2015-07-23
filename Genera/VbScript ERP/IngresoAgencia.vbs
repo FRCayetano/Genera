@@ -1,5 +1,13 @@
 Sub Show()
   
+  gForm.Controls("cntPanel")(1).Top = 250
+  gForm.Controls("ComboUsuario")(1).Height = 300
+  gForm.Controls("TextoUsuario")(1).Height = 300
+  gForm.Controls("ComboUsuario")(2).Height = 300
+  gForm.Controls("TextoUsuario")(3).Height = 300
+  gForm.Controls("TextoUsuario")(4).Height = 300
+  
+  
   If gForm.Controls("EObjeto").ObjGlobal.Propiedades("IdIngresoAgencia") = "" Then
   
     lastId = gcn.dameValorCampo("select isnull(max(IdIngresoAgencia),0) + 1 from Pers_IngresoAgencia_Cabecera")
@@ -10,7 +18,11 @@ Sub Show()
     gForm.Botonera.Boton("btVerPedCli").Visible = False
     gForm.Botonera.Boton("btVerPedPro").Visible = False
     
+    CrearGridAgenciaLineas()
+    
   Else
+  
+    CrearGridAgenciaLineas()
 
     'Si la cebecera de IngresoAgencia ya tiene un nuñero de pedido o si no hay lineas en las lineas del Ingreso, no mostrar el boton para Generar los pedidos'
     If gcn.dameValorCampo("select IdPedido from Pers_IngresoAgencia_Cabecera where IdIngresoAgencia = "&gForm.Controls("EObjeto").ObjGlobal.Propiedades("IdIngresoAgencia")&"") > 0 Or gcn.dameValorCampo("select count(IdIngresoAgenciaLinea) from Pers_IngresoAgencia_Lineas where IdIngresoAgencia = "&gForm.Controls("EObjeto").ObjGlobal.Propiedades("IdIngresoAgencia")&"") = 0 Then
@@ -26,12 +38,14 @@ Sub Show()
 
     If gcn.dameValorCampo("select IdPedido from Pers_IngresoAgencia_Cabecera where IdIngresoAgencia = "&gForm.Controls("EObjeto").ObjGlobal.Propiedades("IdIngresoAgencia")&"") > 0 Then
       gForm.Botonera.Boton("btVerPedCli").Visible = True
+      gForm.Botonera.Boton("btImportIngreso").Visible = False
     Else
       gForm.Botonera.Boton("btVerPedCli").Visible = False
     End If
     
     If gcn.dameValorCampo("select count(IdPedidoProv) from Pers_Mapeo_Ingreso_PedidoProv where IdIngresoAgencia = "&gForm.Controls("EObjeto").ObjGlobal.Propiedades("IdIngresoAgencia")&"") > 0 Then
       gForm.Botonera.Boton("btVerPedPro").Visible = True
+      gForm.Botonera.Boton("btImportIngreso").Visible = False
     Else
       gForm.Botonera.Boton("btVerPedPro").Visible = False
     End If
@@ -40,8 +54,6 @@ Sub Show()
   gForm.Controls("TextoUsuario")(4).CaptionLink = True
   gForm.Controls("ComboUsuario")(1).CaptionLink = True
   gForm.Controls("ComboUsuario")(2).CaptionLink = True
-  
-  CrearGridAgenciaLineas
 
 End Sub
 
@@ -82,8 +94,8 @@ Sub CrearGridAgenciaLineas()
       .AgregaColumna "IdIngresoAgencia", 0, "IdIngresoAgencia",False
       .AgregaColumna "IdIngresoAgenciaLinea", 0, "IdIngresoAgenciaLinea",False
       .AgregaColumna "IdProyecto", 2000, "Codigo proyecto",False
-      .AgregaColumna "IdProyectoAgencia", 2000, "Codigo proyecto interno a la agencia",False
-      .AgregaColumna "Importe", 1000, "Importe",False,,,"#,##0.00"
+      .AgregaColumna "IdProyectoAgencia", 3000, "Codigo proyecto interno a la agencia",False
+      .AgregaColumna "Importe", 1500, "Importe",False,,,"#,##0.00"
       .AgregaColumna "@DescripProyecto", 5000, "Descripcion",True
       
       .FROM = "Pers_IngresoAgencia_Lineas"
@@ -122,10 +134,13 @@ Sub GenerarPedidosProveedor()
         
   If Not gcn.EjecutaStoreCol("PPers_GenerarPedidoProveedor_From_Ingreso", lColparams) Then
     MsgBox "No se ha podido crear el pedido proveedor asociado al proyecto numero : "&larr(i,lgrd.colindex("IdProyecto"))&"" , vbCritical, "Error creando pedido proveedor"
+    gForm.Botonera.Boton("btImportIngreso").Visible = True
   Else
     MsgBox "Pedidos proveedores generados", vbInformation, "Informacion"
     gForm.Botonera.Boton("btVerPedPro").Visible = True
     gForm.Botonera.Boton("btGenerarPed").Visible = False
+    gForm.Botonera.Boton("btImportIngreso").Visible = False
+    BloquearGrid()
   End If
 End Sub
 
@@ -149,10 +164,13 @@ Sub GenerarPedidoCliente()
     
     If Not gcn.EjecutaStoreCol("PPers_GenerarPedidoCliente_From_Ingreso", lColparams) Then
       MsgBox "No se ha podido crear el pedido cliente asociado al proyecto numero : "&larr(i,lgrd.colindex("IdProyecto"))&"" , vbCritical, "Error creando pedido cliente"
+      gForm.Botonera.Boton("btImportIngreso").Visible = True
     Else
       MsgBox "Pedido cliente generado" , vbInformation, "Informacion"
       gForm.Botonera.Boton("btVerPedCli").Visible = True
       gForm.Botonera.Boton("btGenerarPed").Visible = False
+      gForm.Botonera.Boton("btImportIngreso").Visible = False
+      BloquearGrid()
     End If 
 End Sub
 
@@ -184,6 +202,8 @@ Sub Botonera_AfterExecute(aBotonera, aBoton)
     
     'codigo para genera x pedidos proveedores que contenga una linea con el importe que va al tercero dependiente del porcentage establecido al principio del proyecto
     GenerarPedidosProveedor
+    
+    gform.Eobjeto.Refresh
   End If
 
   If aBoton.Name = "btImportIngreso" Then
@@ -328,26 +348,39 @@ End Function
 
 'Para Activar este evento hay que configurar la grid. Poner en el sub Initialize por ejemplo: gForm.grdLineas.ActivarScripts = True
 Sub Grid_BeforeDelete(aGrid,aCancel)
-  If aGrid.Name = "GridAgenciaLineas" Then
-    TipoObj = "IngresoAgencia"
-    IdIngreso = aGrid.GetValue("IdIngresoAgencia")
-    IdLinea = aGrid.GetValue("IdIngresoAgenciaLinea")
-    Return = ""
+  'If aGrid.Name = "GridAgenciaLineas" Then
+    'TipoObj = "IngresoAgencia"
+    'IdIngreso = aGrid.GetValue("IdIngresoAgencia")
+    'IdLinea = aGrid.GetValue("IdIngresoAgenciaLinea")
+    'Return = ""
     
-    Set params = gcn.DameNewCollection
-    params.Add IdIngreso
-    params.Add IdLinea
-    params.Add TipoObj
-    params.Add Return
+    'Set params = gcn.DameNewCollection
+    'params.Add IdIngreso
+    'params.Add IdLinea
+    'params.Add TipoObj
+    'params.Add Return
     
-    If Not gcn.EjecutaStoreCol("pPers_DespuesEliminar_IngresoLinea", params) Then 
-      MsgBox "Fallo durante la actualizacion del importe total", vbError
-      aCancel = True
-    End If
+    'If Not gcn.EjecutaStoreCol("pPers_DespuesEliminar_IngresoLinea", params) Then 
+      'MsgBox "Fallo durante la actualizacion del importe total", vbError
+      'aCancel = True
+   ' End If
         
-    gform.Eobjeto.Refresh
+    'gform.Eobjeto.Refresh
     
-  End If
+  'End If
 End Sub
 
+'Para Activar este evento hay que configurar la grid. Poner en el sub Initialize por ejemplo: gForm.grdLineas.ActivarScripts = True
+Sub Grid_AfterDelete(aGrid)
+   gform.Eobjeto.Refresh
+End Sub
 
+Sub BloquearGrid()
+  Set lGrid = gForm.Controls("GridAgenciaLineas")
+  
+  With lGrid
+    .Eliminar = False
+    .Agregar = False
+    .Editar = False
+  End With
+End Sub
